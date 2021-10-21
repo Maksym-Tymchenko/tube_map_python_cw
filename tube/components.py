@@ -18,7 +18,6 @@ class Station:
     def __repr__(self):
         return f"Station({self.id}, {self.name}, {self.zones})"
 
-
 class Line:
     def __init__(self, id, name):
         """ A class representing a Tube line.
@@ -31,8 +30,7 @@ class Line:
         self.name = name
 
     def __repr__(self):
-        return f"Line({self.id}, {self.name})"
-
+        return f"Repr Line({self.id}, {self.name})"
 
 class Connection:
     def __init__(self, stations, line, time):
@@ -68,3 +66,5 @@ if __name__ == '__main__':
     connection = Connection(stations={station_1, station_2},
                             line=line,
                             time=4)
+    print(repr(line))
+    print(str(line))
