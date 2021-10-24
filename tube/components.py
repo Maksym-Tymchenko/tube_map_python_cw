@@ -68,3 +68,4 @@ if __name__ == '__main__':
     connection = Connection(stations={station_1, station_2},
                             line=line,
                             time=4)
+    print(station_1)

@@ -1,3 +1,5 @@
+from tube.map import TubeMap
+
 class NeighbourGraphBuilder:
     """
     Task 2: Complete the definition of the NeighbourGraphBuilder class by:
@@ -69,7 +71,54 @@ class NeighbourGraphBuilder:
         Note:
             If the input data (tubemap) is invalid, the method should return an empty dict.
         """
-        return dict()  # TODO: Complete this method
+
+        # Initialize graph
+        graph = dict() 
+       
+        # Check if tubemap input is valid, if not return empty dictionary
+        if not isinstance(tubemap,TubeMap):
+            return graph
+
+
+        # Iterate over Connections and add each to corresponding place in graph
+        for connection in tubemap.connections:
+            (station_1, station_2) = connection.stations
+            id_station_1 = station_1.id
+            id_station_2 = station_2.id
+            
+            try:
+                # Check if there is an existing list of connections for this combination of stations
+                existing_list = graph[id_station_1][id_station_2]
+
+                # Append the connection to the existing list of connections
+                existing_list.append(connection)
+
+            except KeyError:
+                try:
+                    # Check if there is an existing dictionary for station 1
+                    test = graph[id_station_1]
+
+                    # Add new item containing the connection to station 2
+                    graph[id_station_1][id_station_2] = [connection]
+
+                except KeyError:
+                    # If there is no existing dictionary for station 1 create it and add connection
+                    graph[id_station_1] = dict()
+                    graph[id_station_1][id_station_2] = [connection]
+
+        # Make connections symmetrical
+        for key_1 in list(graph):
+            for key_2 in list(graph[key_1]):
+                try:
+                    # Check if key_2 exists in graph, if so make symmetrical
+                    test = graph[key_2]
+                    graph[key_2][key_1] = graph[key_1][key_2]           
+                except KeyError:
+                    # If there is no existing dictionary for key_2 create it and make symmetrical
+                    graph[key_2] = dict()
+                    graph[key_2][key_1] = graph[key_1][key_2]
+
+        return graph
 
 
 def test_graph():

@@ -1,5 +1,5 @@
 import json
-import components
+from tube.components import Station, Line, Connection
 
 class TubeMap:
     """
@@ -39,7 +39,7 @@ class TubeMap:
         Note:
             If the filepath is invalid, no attribute should be updated, and no error should be raised.
         """
-
+        
         # Read from filepath
         try:
             with open(filepath, "r") as jsonfile:
@@ -60,9 +60,9 @@ class TubeMap:
             else:
                 zones = {int(zone)}
 
-            station_instance = components.Station(id=id,
-                        name=name,
-                        zones=zones)
+            station_instance = Station(id=id,
+                                       name=name,
+                                       zones=zones)
             station_dict.update({id:station_instance})
         self.stations = station_dict
 
@@ -72,7 +72,7 @@ class TubeMap:
         for line in all_lines:
             id = line["line"]
             name = line["name"]
-            line_instance = components.Line(id=id, name=name)
+            line_instance = Line(id=id, name=name)
             line_dict.update({id:line_instance})
         self.lines = line_dict
 
@@ -82,15 +82,20 @@ class TubeMap:
         for connection in all_connections:
             id_station1 = connection["station1"]
             id_station2 = connection["station2"]
+
+            # Find the 2 station instances using their ids
             station1 = self.stations[id_station1]
             station2 = self.stations[id_station2]
 
+            # Find the corresponding Line instance using the line id
             id_line = connection["line"]
             line = self.lines[id_line]
-            time = connection["time"]
-            connection_instance = components.Connection(stations={station1,station2},
-                                                        line=line, 
-                                                        time=int(time))
+
+            time_str = connection["time"]
+            time = int(time_str)
+            connection_instance = Connection(stations={station1,station2},
+                                                       line=line,
+                                                       time=time)
             connection_list.append(connection_instance)
         self.connections = connection_list
 
@@ -98,7 +103,7 @@ class TubeMap:
 
 def test_import():
     tubemap = TubeMap()
-    tubemap.import_from_json("data/london2.json")
+    tubemap.import_from_json("data/london.json")
     
     # view one example Station
     print(tubemap.stations[list(tubemap.stations)[0]])
@@ -113,7 +118,6 @@ def test_import():
     print([station for station in tubemap.connections[0].stations])
 
 
-
 def test_import_custom():
     tubemap = TubeMap()
     tubemap.import_from_json("data/london.json")
@@ -123,5 +127,6 @@ def test_import_custom():
     print(tubemap.lines[list(tubemap.lines)[0]])
 
 if __name__ == "__main__":
+
     test_import()
     #test_import_custom()
