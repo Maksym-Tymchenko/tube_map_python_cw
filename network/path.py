@@ -128,9 +128,7 @@ class PathFinder:
         prev_dict = dict(zip(unexplored_stations,prev_node_init))   
         
         current_station_id = start_id
-        counter = 0
         while current_station_id != end_id:
-            counter += 1
 
             """
             # Find station from unexplored stations with shortest time
