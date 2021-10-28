@@ -44,7 +44,6 @@ class PathFinder:
             if both_found:
                 break
 
-        # Return True if both names were found
         return both_found, name_1_id, name_2_id
 
     def get_full_path(self, end_station_id, prev_dict):
@@ -179,7 +178,7 @@ class PathFinder:
                 except KeyError:
                     pass
  
-        print(dist_dict)
+        # print(dist_dict)
         station_path = self.get_full_path(end_id, prev_dict)
 
         return station_path  # TODO
@@ -192,8 +191,8 @@ def test_shortest_path():
     
     path_finder = PathFinder(tubemap)
     stations = path_finder.get_shortest_path("Covent Garden", "Green Park")
-    # stations = path_finder.get_shortest_path("Ravenscourt Park", "Tufnell Park")
-    print(stations)
+    # stations = path_finder.get_shortest_path("Ravenscourt Park", "Ravenscourt Park")
+    # print(stations)
 
     station_names = [station.name for station in stations]
     print(station_names)
@@ -201,6 +200,88 @@ def test_shortest_path():
                 "Green Park"]
     assert station_names == expected
 
+def test_custom_path(station_1, station_2):
+    from tube.map import TubeMap
+    tubemap = TubeMap()
+    tubemap.import_from_json("data/london.json")
+    path_finder = PathFinder(tubemap)
+    stations = path_finder.get_shortest_path(station_1, station_2)
+    print(stations)
+    
+    station_names = [station.name for station in stations]
+    for station_name in station_names:
+        print(station_name)
+
+def test_all_paths_from_ravenscourt():
+    import time
+    from tube.map import TubeMap
+    tubemap = TubeMap()
+    tubemap.import_from_json("data/london.json")
+    path_finder = PathFinder(tubemap)
+    
+    # Check for connection from Ravenscourt Park to all possible staitons
+    start = time.time()
+    for other_station in tubemap.stations.values():
+        other_station_name = other_station.name
+        print(other_station_name)
+
+        stations = path_finder.get_shortest_path("Ravenscourt Park", other_station_name)
+        # print(stations)
+
+        # Check that a path has been calculated for all of them
+        assert(stations != None)
+
+        station_names = [station.name for station in stations]
+        # print(station_names)
+
+    end = time.time()
+    total_time = end - start
+    print(f"Success! It took just {total_time} seconds to check all possible paths from Ravenscourt Park.")
+
+def test_all_paths():
+    import time
+    from tube.map import TubeMap
+    tubemap = TubeMap()
+    tubemap.import_from_json("data/london.json")
+    path_finder = PathFinder(tubemap)
+    
+    # Check all possible combination of stations
+    start = time.time()
+    for station_1 in tubemap.stations.values():
+            for station_2 in tubemap.stations.values():
+                print((station_1.name, station_2.name))
+                
+                stations = path_finder.get_shortest_path(station_1.name, station_2.name)
+
+                # Check that a path has been calculated for all of them
+                assert(stations != None)
+
+                # station_names = [station.name for station in stations]
+                # print(station_names)
+    end = time.time()
+    total_time = end - start
+    print(f"Success! It took just {total_time} seconds check all possible connections")
 
 if __name__ == "__main__":
-    test_shortest_path()
+    # test_shortest_path()
+
+    # Test my way to my friend's house
+    test_custom_path("Ravenscourt Park", "Elephant & Castle")
+
+    # Test very far stations
+    test_custom_path("Heathrow Terminal 4", "Grange Hill")
+
+    # Test my way to Imperial
+    test_custom_path("Ravenscourt Park", "South Kensington")
+
+    # Test random
+    test_custom_path("Oxford Circus", "Charing Cross")
+
+    # Test same start and end
+    test_custom_path("Oxford Circus", "Oxford Circus")
+
+    # Test all paths from Ravenscourt Park
+    # test_all_paths_from_ravenscourt()
+
+    # Test all possible combinations for errors or infinite loops
+    # test_all_paths()
