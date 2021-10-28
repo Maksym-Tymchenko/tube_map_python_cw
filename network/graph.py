@@ -1,5 +1,6 @@
 from tube.map import TubeMap
 
+
 class NeighbourGraphBuilder:
     """
     Task 2: Complete the definition of the NeighbourGraphBuilder class by:
@@ -76,7 +77,7 @@ class NeighbourGraphBuilder:
         graph = dict() 
        
         # Check if tubemap input is valid, if not return empty dictionary
-        if not isinstance(tubemap,TubeMap):
+        if not isinstance(tubemap, TubeMap):
             return graph
 
 

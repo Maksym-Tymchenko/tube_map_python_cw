@@ -65,7 +65,7 @@ class TubeMap:
             station_instance = Station(id=id,
                                        name=name,
                                        zones=zones)
-            station_dict.update({id:station_instance})
+            station_dict.update({id: station_instance})
 
         self.stations = station_dict
 
@@ -78,7 +78,7 @@ class TubeMap:
 
             # Create line instance with extracted information
             line_instance = Line(id=id, name=name)
-            line_dict.update({id:line_instance})
+            line_dict.update({id: line_instance})
 
         self.lines = line_dict
 
@@ -101,7 +101,7 @@ class TubeMap:
             time = int(time_str)
   
             # Create connection instance using extracted information
-            connection_instance = Connection(stations={station1,station2},
+            connection_instance = Connection(stations={station1, station2},
                                                        line=line,
                                                        time=time)
             connection_list.append(connection_instance)
@@ -109,6 +109,7 @@ class TubeMap:
         self.connections = connection_list
 
         return
+
 
 def test_import():
     tubemap = TubeMap()

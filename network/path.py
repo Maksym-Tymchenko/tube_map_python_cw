@@ -1,5 +1,6 @@
 from network.graph import NeighbourGraphBuilder
 
+
 class PathFinder:
     """
     Task 3: Complete the definition of the PathFinder class by:
@@ -123,7 +124,7 @@ class PathFinder:
 
         # Initialize dictionary of distances from start to station
         dist_init = [float('inf')] * len(unexplored_stations)
-        dist_dict = dict(zip(unexplored_stations,dist_init))
+        dist_dict = dict(zip(unexplored_stations, dist_init))
         dist_dict[start_id] = 0
 
         # Initialize dictionary of unexplored distances
@@ -131,7 +132,7 @@ class PathFinder:
 
         # Initialize dict of previous node on shortest path
         prev_node_init = [None] * len(unexplored_stations) 
-        prev_dict = dict(zip(unexplored_stations,prev_node_init))   
+        prev_dict = dict(zip(unexplored_stations, prev_node_init))   
         
         current_station_id = start_id
         while current_station_id != end_id:
@@ -191,6 +192,7 @@ def test_shortest_path():
                 "Green Park"]
     assert station_names == expected
 
+
 def test_custom_path(station_1, station_2):
     from tube.map import TubeMap
     tubemap = TubeMap()
@@ -202,6 +204,7 @@ def test_custom_path(station_1, station_2):
     station_names = [station.name for station in stations]
     for station_name in station_names:
         print(station_name)
+
 
 def test_all_paths_from_ravenscourt():
     import time
@@ -220,7 +223,7 @@ def test_all_paths_from_ravenscourt():
         # print(stations)
 
         # Check that a path has been calculated for all of them
-        assert(stations != None)
+        assert(stations is not None)
 
         station_names = [station.name for station in stations]
         # print(station_names)
@@ -228,6 +231,7 @@ def test_all_paths_from_ravenscourt():
     end = time.time()
     total_time = end - start
     print(f"Success! It took just {total_time} seconds to check all possible paths from Ravenscourt Park.")
+
 
 def test_all_paths():
     import time
@@ -239,19 +243,20 @@ def test_all_paths():
     # Check all possible combination of stations
     start = time.time()
     for station_1 in tubemap.stations.values():
-            for station_2 in tubemap.stations.values():
-                print((station_1.name, station_2.name))
-                
-                stations = path_finder.get_shortest_path(station_1.name, station_2.name)
+        for station_2 in tubemap.stations.values():
+            print((station_1.name, station_2.name))
+            
+            stations = path_finder.get_shortest_path(station_1.name, station_2.name)
 
-                # Check that a path has been calculated for all of them
-                assert(stations != None)
+            # Check that a path has been calculated for all of them
+            assert(stations is not None)
 
-                # station_names = [station.name for station in stations]
-                # print(station_names)
+            # station_names = [station.name for station in stations]
+            # print(station_names)
     end = time.time()
     total_time = end - start
     print(f"Success! It took just {total_time} seconds check all possible connections.")
+
 
 if __name__ == "__main__":
     test_shortest_path()
@@ -273,7 +278,7 @@ if __name__ == "__main__":
     # test_custom_path("Oxford Circus", "Charing Cross")
 
     # Test same start and end
-    test_custom_path("Oxford Circus", "Oxford Circus")
+    # test_custom_path("Oxford Circus", "Oxford Circus")
 
     # Test all paths from Ravenscourt Park
     # test_all_paths_from_ravenscourt()
