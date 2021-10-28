@@ -20,18 +20,28 @@ class PathFinder:
         # Feel free to add anything else needed here.
         
     def validate_station_names(self, start_station_name, end_station_name):
-        """ Check if station names are valid strings part of the tubemap list of stations."""
-        # Check if inputs are strings
-        if not (isinstance(start_station_name, str) and isinstance(end_station_name, str)):
-            return False
-               
-        # Iterate through station instances and check if station names are there
+        """ Check if station names are valid strings part of the tubemap list of stations.
+
+        Args:
+            start_station_name (str): name of the starting station
+            end_station_name (str): name of the ending station
+
+        Returns:
+            tuple (both_found, name_id_1, name_id_2): where both_found is true
+            if both station names were found in self.tubemap,
+            and name_id_1 and name_id_2 are the string ids of the start and end stations.
+        """
         name_1_found = False
         name_2_found = False
         both_found = False
         name_1_id = str()
         name_2_id = str()
 
+        # Check if inputs are strings
+        if not (isinstance(start_station_name, str) and isinstance(end_station_name, str)):
+            return False, name_1_id, name_2_id
+
+        # Iterate through station instances and check if input station names are there
         for station in self.tubemap.stations.values():
             if (station.name == start_station_name) and not name_1_found:
                 name_1_found = True
@@ -47,11 +57,20 @@ class PathFinder:
         return both_found, name_1_id, name_2_id
 
     def get_full_path(self, end_station_id, prev_dict):
-        """Create the full list of stations on from start to end station."""
+        """Create the full list of stations instances from start to end station.
+
+        Args:
+            end_station_id (str): key id of the end station
+            prev_dict (dict): maps station id to station id of the previous station on path
+
+        Returns:
+        list[Station] : list of Station objects from start to end.
+        """
         full_list = []
         current_station_id = end_station_id
         
-        # Stop when previous station is None (start station reached)
+        # Append station instances in reverse order
+        # and stop when previous station is None (start station reached)
         while current_station_id is not None:
 
             station = self.tubemap.stations[current_station_id]
@@ -98,22 +117,10 @@ class PathFinder:
         if not are_names_valid:
             # Return None if either station does not exist
             return None
+
         # Initialize set of unexplored stations
         unexplored_stations = {station for station in self.tubemap.stations.keys()}
 
-        """
-        # Initialize list of distances where each entry is the distance of the nth station
-        dist = [float('inf')] * len(unexplored_stations)        
-        dist[int(start_id)] = 0
-        print(dist)
-        print(len(dist))
-        print(len(unexplored_stations))
-
-        # Initialize list of previous node id
-        prev_node_id = [None] * len(unexplored_stations) 
-        print(prev_node_id)
-        """
-        
         # Initialize dictionary of distances from start to station
         dist_init = [float('inf')] * len(unexplored_stations)
         dist_dict = dict(zip(unexplored_stations,dist_init))
@@ -128,19 +135,6 @@ class PathFinder:
         
         current_station_id = start_id
         while current_station_id != end_id:
-
-            """
-            # Find station from unexplored stations with shortest time
-            dist_unexplored = [dist[id-2] for id in unexplored_stations]
-            shortest_time = min(dist_unexplored)
-            shortest_id = dist_unexplored.index(shortest_time)
-
-            # Set unexplored station with shortest time to be current station
-            current_station_id = shortest_id    
-
-            # Remove current station from unexplored stations
-            # del dist_dict[current_station_id]
-            """ 
 
             # Find station from unexplored stations with shortest time
             shortest_time = min(dist_unexplored_dict.values())
@@ -178,10 +172,9 @@ class PathFinder:
                 except KeyError:
                     pass
  
-        # print(dist_dict)
         station_path = self.get_full_path(end_id, prev_dict)
 
-        return station_path  # TODO
+        return station_path
 
 
 def test_shortest_path():
@@ -191,8 +184,6 @@ def test_shortest_path():
     
     path_finder = PathFinder(tubemap)
     stations = path_finder.get_shortest_path("Covent Garden", "Green Park")
-    # stations = path_finder.get_shortest_path("Ravenscourt Park", "Ravenscourt Park")
-    # print(stations)
 
     station_names = [station.name for station in stations]
     print(station_names)
@@ -260,22 +251,26 @@ def test_all_paths():
                 # print(station_names)
     end = time.time()
     total_time = end - start
-    print(f"Success! It took just {total_time} seconds check all possible connections")
+    print(f"Success! It took just {total_time} seconds check all possible connections.")
 
 if __name__ == "__main__":
-    # test_shortest_path()
-
+    test_shortest_path()
+    
+    # Test invalid input names
+    # test_custom_path("Moscow", "Elephant & Castle")
+    # test_custom_path(150, 300)
+    
     # Test my way to my friend's house
-    test_custom_path("Ravenscourt Park", "Elephant & Castle")
+    # test_custom_path("Ravenscourt Park", "Elephant & Castle")
 
     # Test very far stations
-    test_custom_path("Heathrow Terminal 4", "Grange Hill")
+    # test_custom_path("Heathrow Terminal 4", "Grange Hill")
 
     # Test my way to Imperial
-    test_custom_path("Ravenscourt Park", "South Kensington")
+    # test_custom_path("Ravenscourt Park", "South Kensington")
 
     # Test random
-    test_custom_path("Oxford Circus", "Charing Cross")
+    # test_custom_path("Oxford Circus", "Charing Cross")
 
     # Test same start and end
     test_custom_path("Oxford Circus", "Oxford Circus")

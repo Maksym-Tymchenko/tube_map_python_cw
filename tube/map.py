@@ -40,14 +40,14 @@ class TubeMap:
             If the filepath is invalid, no attribute should be updated, and no error should be raised.
         """
         
-        # Read from filepath
+        # Read from filepath and return if read fails
         try:
             with open(filepath, "r") as jsonfile:
                 data = json.load(jsonfile)
         except FileNotFoundError:
             return
             
-        # convert stations to dictionary
+        # Convert stations to dictionary
         all_stations = data["stations"]
         station_dict = dict()
         for station in all_stations:
@@ -55,28 +55,34 @@ class TubeMap:
             name = station["name"]
             zone = float(station["zone"])
 
+            # Convert non integer zones to a set of 2 zones
             if (zone % 1) == 0.5:
                 zones = {int(zone-0.5), int(zone+0.5)}
             else:
                 zones = {int(zone)}
 
+            # Create station instance with extracted information
             station_instance = Station(id=id,
                                        name=name,
                                        zones=zones)
             station_dict.update({id:station_instance})
+
         self.stations = station_dict
 
-        # convert lines to dictionary
+        # Convert lines to dictionary
         all_lines = data["lines"]
         line_dict = dict()
         for line in all_lines:
             id = line["line"]
             name = line["name"]
+
+            # Create line instance with extracted information
             line_instance = Line(id=id, name=name)
             line_dict.update({id:line_instance})
+
         self.lines = line_dict
 
-        # convert connections to list
+        # Convert connections to list
         all_connections = data["connections"]
         connection_list = list()
         for connection in all_connections:
@@ -93,13 +99,16 @@ class TubeMap:
 
             time_str = connection["time"]
             time = int(time_str)
+  
+            # Create connection instance using extracted information
             connection_instance = Connection(stations={station1,station2},
                                                        line=line,
                                                        time=time)
             connection_list.append(connection_instance)
+
         self.connections = connection_list
 
-        return # TODO: Complete this method
+        return
 
 def test_import():
     tubemap = TubeMap()
@@ -118,15 +127,6 @@ def test_import():
     print([station for station in tubemap.connections[0].stations])
 
 
-def test_import_custom():
-    tubemap = TubeMap()
-    tubemap.import_from_json("data/london.json")
-    # view one example Station
-    print(tubemap.stations[list(tubemap.stations)[0]])
-    # view one example Line
-    print(tubemap.lines[list(tubemap.lines)[0]])
-
 if __name__ == "__main__":
 
     test_import()
-    #test_import_custom()
