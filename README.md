@@ -1,4 +1,22 @@
-# COMP70053 - Python Programming - 2021 - Coursework 2
+# Tube Map Python Coursework
+
+## Context
+
+This is a coursework assignment that I completed as part of my Python module in my MSc Artificial Intelligence. The details of the coursework are described in <em>description.pdf</em>. My contribution consisted in completing some of the classes in the existing project structure described below in order to create a program that find the shortest path between two tube stations from the London tube.
+
+## Usage
+
+To execute the code run `python3 main.py`. This will find the shortest path between 'Stockwell' and 'Ealing Broadway'.
+To change the two stations: 
+
+- open `main.py` 
+- replace the tube stations in the line `stations = path_finder.get_shortest_path('Stockwell', 'Ealing Broadway')`
+- execute `python3 main.py`
+
+<p align="center">
+<img src="tube_demo.gif"      
+alt="Game demo"/>
+<p/>
 
 ## Project Structure
 
